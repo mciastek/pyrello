@@ -1,0 +1,28 @@
+version: '3'
+services:
+  app:
+    command: ./boot.sh
+    restart: unless-stopped
+    image: pyrello
+    build:
+      context: ./
+    depends_on:
+      - postgres
+    environment:
+      - DB_CONNECTION_URI=postgresql://pyrello:pyrello@postgres:5432/pyrello
+    ports:
+      - '127.0.0.1:5000:5000'
+  postgres:
+    restart: unless-stopped
+    image: postgres:10.4
+    environment:
+      POSTGRES_DB: pyrello
+      POSTGRES_USER: pyrello
+      POSTGRES_PASSWORD: pyrello
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - './postgres:/docker-entrypoint-initdb.d'
+      - 'postgres-data:/var/lib/postgresql/data'
+volumes:
+  postgres-data:
