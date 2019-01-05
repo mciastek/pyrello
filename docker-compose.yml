@@ -12,6 +12,8 @@ services:
       - DB_CONNECTION_URI=postgresql://pyrello:pyrello@postgres:5432/pyrello
     ports:
       - '127.0.0.1:5000:5000'
+    volumes:
+      - '.:/pyrello'
   postgres:
     restart: unless-stopped
     image: postgres:10.4

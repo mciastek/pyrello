@@ -1,4 +1,5 @@
 FROM python:3.7.2-alpine
+ENV PYTHONUNBUFFERED 1
 
 RUN adduser -D pyrello
 
