@@ -12,7 +12,7 @@ RUN venv/bin/pip install gunicorn
 
 COPY app app
 COPY migrations migrations
-COPY pyrello.py boot.sh ./
+COPY pyrello.py config.py boot.sh ./
 RUN chmod +x boot.sh
 
 ENV FLASK_APP pyrello.py
