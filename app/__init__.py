@@ -1,12 +1,20 @@
 from flask import Flask
 from config import Config
-from .db import init_db_for
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from flask_bcrypt import Bcrypt
+
+db = SQLAlchemy()
+migrate = Migrate()
+bcrypt = Bcrypt()
 
 def create_app():
   app = Flask(__name__)
   app.config.from_object(Config)
 
-  init_db_for(app)
+  db.init_app(app)
+  migrate.init_app(app, db)
+  bcrypt.init_app(app)
 
   @app.route('/')
   def hello_world():
