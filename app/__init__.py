@@ -1,14 +1,10 @@
 from flask import Flask
 from config import Config
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_bcrypt import Bcrypt
 
-from app import models
+from app.models import db, bcrypt
 
-db = SQLAlchemy()
 migrate = Migrate()
-bcrypt = Bcrypt()
 
 def create_app():
   app = Flask(__name__)

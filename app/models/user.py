@@ -1,7 +1,8 @@
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.hybrid import hybrid_property
-from app import db, bcrypt
+
+from .base import db, bcrypt
 
 class User(db.Model):
   __tablename__ = 'users'
