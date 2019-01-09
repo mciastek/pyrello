@@ -16,6 +16,7 @@ def recreate_db():
   db.drop_all()
   db.create_all()
   db.session.commit()
+  print('Done!')
 
 if __name__ == '__main__':
   manager.run()
