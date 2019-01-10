@@ -7,19 +7,20 @@ RUN apk --no-cache add --virtual .build-deps \
   g++ gcc libgcc libstdc++ linux-headers make \
   libffi libffi-dev postgresql-dev musl-dev python3-dev
 
+RUN pip install pipenv
+
 RUN adduser -D pyrello
 
 WORKDIR /home/pyrello
 
-COPY requirements.txt requirements.txt
-RUN python -m venv venv
-RUN venv/bin/pip install -r requirements.txt
-RUN venv/bin/pip install gunicorn
+COPY Pipfile Pipfile
+COPY Pipfile.lock Pipfile.lock
+RUN pipenv install --system
 
 RUN apk del .build-deps
 
 COPY app app
-# COPY migrations migrations
+COPY migrations migrations
 COPY config.py manage.py docker-entrypoint.sh ./
 RUN chmod +x ./docker-entrypoint.sh
 
