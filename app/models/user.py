@@ -12,7 +12,9 @@ class User(db.Model):
   last_name = db.Column(db.Text, nullable=False)
   email = db.Column(db.String(120), unique=True, nullable=False)
   _password = db.Column(db.String(128))
+
   comments = db.relationship('Comment', backref='user', lazy=True)
+  owned_boards = db.relationship('Board', backref='user', lazy=True)
 
   def __init__(self, first_name, last_name, email):
     self.first_name = first_name

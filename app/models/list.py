@@ -10,6 +10,8 @@ class List(db.Model):
   name = db.Column(db.Text, nullable=False)
   position = db.Column(db.Integer, nullable=False, default=1)
 
+  board_id = db.Column(UUID(as_uuid=True), db.ForeignKey('boards.id'), nullable=False)
+
   def __init__(self, name, position):
     self.name = name
     self.position = position
