@@ -10,6 +10,7 @@ class Card(db.Model):
   name = db.Column(db.Text, nullable=False)
   description = db.Column(db.Text, nullable=False)
   position = db.Column(db.Integer, nullable=False, default=1)
+  comments = db.relationship('Comment', backref='card', lazy=True)
 
   def __init__(self, name, description, position):
     self.name = name
