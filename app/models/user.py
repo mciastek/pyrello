@@ -15,6 +15,7 @@ class User(db.Model):
 
   comments = db.relationship('Comment', backref='user', lazy=True)
   owned_boards = db.relationship('Board', backref='user', lazy=True)
+  owned_cards = db.relationship('Card', backref='user', lazy=True)
 
   def __init__(self, first_name, last_name, email):
     self.first_name = first_name

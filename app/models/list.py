@@ -11,6 +11,7 @@ class List(db.Model):
   position = db.Column(db.Integer, nullable=False, default=1)
 
   board_id = db.Column(UUID(as_uuid=True), db.ForeignKey('boards.id'), nullable=False)
+  cards = db.relationship('Card', backref='list', lazy=True)
 
   def __init__(self, name, position):
     self.name = name

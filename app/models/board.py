@@ -12,6 +12,8 @@ class Board(db.Model):
 
   owner_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
   lists = db.relationship('List', backref='board', lazy=True)
+  labels = db.relationship('Label', backref='board', lazy=True)
+  cards = db.relationship('Card', backref='board', lazy=True)
 
   def __init__(self, name, slug):
     self.name = name

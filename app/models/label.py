@@ -10,6 +10,8 @@ class Label(db.Model):
   name = db.Column(db.Text, nullable=False)
   color = db.Column(db.String(8), nullable=False)
 
+  board_id = db.Column(UUID(as_uuid=True), db.ForeignKey('boards.id'), nullable=False)
+
   def __init__(self, name, color):
     self.name = name
     self.color = color

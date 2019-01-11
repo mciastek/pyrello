@@ -12,6 +12,9 @@ class Card(db.Model):
   position = db.Column(db.Integer, nullable=False, default=1)
 
   comments = db.relationship('Comment', backref='card', lazy=True)
+  board_id = db.Column(UUID(as_uuid=True), db.ForeignKey('boards.id'), nullable=False)
+  list_id = db.Column(UUID(as_uuid=True), db.ForeignKey('lists.id'), nullable=False)
+  owner_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
 
   def __init__(self, name, description, position):
     self.name = name
