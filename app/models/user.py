@@ -3,6 +3,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.hybrid import hybrid_property
 
 from .base import db, bcrypt, BaseMixin
+from app import app
 
 boards = db.Table('user_board',
   db.Column('user_id', UUID(as_uuid=True), db.ForeignKey('user.id'), primary_key=True),
@@ -49,4 +50,7 @@ class User(BaseMixin, db.Model):
 
   @password.setter
   def password(self, plaintext):
-    self._password = bcrypt.generate_password_hash(plaintext).decode('utf-8')
+    self._password = bcrypt.generate_password_hash(
+      plaintext,
+      app.config.get('BCRYPT_LOG_ROUNDS')
+    ).decode('utf-8')

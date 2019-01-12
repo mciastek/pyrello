@@ -1,9 +1,12 @@
 import uuid
+import jwt
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import UUID
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+
+from app import app
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -25,6 +28,38 @@ class BaseMixin(object):
     instance.updated_at = now
 
   @classmethod
-  def register(self):
-    db.event.listen(self, 'before_insert', self.create_time)
-    db.event.listen(self, 'before_update', self.update_time)
+  def register(cls):
+    db.event.listen(cls, 'before_insert', cls.create_time)
+    db.event.listen(cls, 'before_update', cls.update_time)
+
+class JWTMixin(object):
+  @classmethod
+  def encode_auth_token(cls, user_id):
+    try:
+      payload = {
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+        'iat': datetime.datetime.utcnow(),
+        'sub': user_id
+      }
+      return jwt.encode(
+        payload,
+        app.config.get('SECRET_KEY'),
+        algorithm='HS256'
+      )
+    except Exception as e:
+      return e
+
+  @staticmethod
+  def decode_auth_token(auth_token):
+    """
+    Validates the auth token
+    :param auth_token:
+    :return: integer|string
+    """
+    try:
+      payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
+      return payload['sub']
+    except jwt.ExpiredSignatureError:
+      return 'Signature expired. Please log in again.'
+    except jwt.InvalidTokenError:
+      return 'Invalid token. Please log in again.'

@@ -5,3 +5,4 @@ class Config(object):
     'postgresql://pyrello:pyrello@localhost:5432/pyrello'
   SQLALCHEMY_TRACK_MODIFICATIONS = False
   BCRYPT_LOG_ROUNDS = 12
+  SECRET_KEY = os.environ.get('SECRET_KEY') or 'supersecret'
