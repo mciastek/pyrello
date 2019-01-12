@@ -11,6 +11,13 @@ manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 
 @manager.command
+def drop_db():
+  print('Dropping database...')
+  db.drop_all()
+  db.session.commit()
+  print('Done!')
+
+@manager.command
 def recreate_db():
   print('Recreating database...')
   db.drop_all()

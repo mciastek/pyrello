@@ -3,13 +3,13 @@ from sqlalchemy.dialects.postgresql import UUID
 
 from .base import db
 
-labels = db.Table('card_labels',
-  db.Column('card_id', UUID(as_uuid=True), db.ForeignKey('cards.id'), primary_key=True),
-  db.Column('label_id', UUID(as_uuid=True), db.ForeignKey('labels.id'), primary_key=True)
+labels = db.Table('card_label',
+  db.Column('card_id', UUID(as_uuid=True), db.ForeignKey('card.id'), primary_key=True),
+  db.Column('label_id', UUID(as_uuid=True), db.ForeignKey('label.id'), primary_key=True)
 )
 
 class Card(db.Model):
-  __tablename__ = 'cards'
+  __tablename__ = 'card'
 
   id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
   name = db.Column(db.Text, nullable=False)
@@ -17,12 +17,12 @@ class Card(db.Model):
   position = db.Column(db.Integer, nullable=False, default=1)
 
   comments = db.relationship('Comment', backref='card', lazy=True)
-  board_id = db.Column(UUID(as_uuid=True), db.ForeignKey('boards.id'), nullable=False)
-  list_id = db.Column(UUID(as_uuid=True), db.ForeignKey('lists.id'), nullable=False)
-  owner_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
+  board_id = db.Column(UUID(as_uuid=True), db.ForeignKey('board.id'), nullable=False)
+  list_id = db.Column(UUID(as_uuid=True), db.ForeignKey('list.id'), nullable=False)
+  owner_id = db.Column(UUID(as_uuid=True), db.ForeignKey('user.id'), nullable=False)
 
   labels = db.relationship('Label', secondary=labels, lazy='subquery',
-    backref=db.backref('cards', lazy=True))
+    backref=db.backref('card', lazy=True))
 
   def __init__(self, name, description, position):
     self.name = name

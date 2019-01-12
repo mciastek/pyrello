@@ -4,13 +4,13 @@ from sqlalchemy.dialects.postgresql import UUID
 from .base import db
 
 class Comment(db.Model):
-  __tablename__ = 'comments'
+  __tablename__ = 'comment'
 
   id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
   text = db.Column(db.Text, nullable=False)
 
-  user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
-  card_id = db.Column(UUID(as_uuid=True), db.ForeignKey('cards.id'), nullable=False)
+  user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('user.id'), nullable=False)
+  card_id = db.Column(UUID(as_uuid=True), db.ForeignKey('card.id'), nullable=False)
 
   def __init__(self, text):
     self.text = text

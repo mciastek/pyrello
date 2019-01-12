@@ -4,18 +4,18 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 from .base import db, bcrypt
 
-boards = db.Table('user_boards',
-  db.Column('user_id', UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True),
-  db.Column('board_id', UUID(as_uuid=True), db.ForeignKey('boards.id'), primary_key=True)
+boards = db.Table('user_board',
+  db.Column('user_id', UUID(as_uuid=True), db.ForeignKey('user.id'), primary_key=True),
+  db.Column('board_id', UUID(as_uuid=True), db.ForeignKey('board.id'), primary_key=True)
 )
 
-cards = db.Table('user_cards',
-  db.Column('user_id', UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True),
+cards = db.Table('user_card',
+  db.Column('user_id', UUID(as_uuid=True), db.ForeignKey('user.id'), primary_key=True),
   db.Column('card_id', UUID(as_uuid=True), db.ForeignKey('card.id'), primary_key=True)
 )
 
 class User(db.Model):
-  __tablename__ = 'users'
+  __tablename__ = 'user'
 
   id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
   first_name = db.Column(db.Text, nullable=False)
@@ -28,10 +28,10 @@ class User(db.Model):
   owned_cards = db.relationship('Card', backref='user', lazy=True)
 
   boards = db.relationship('Board', secondary=boards, lazy='subquery',
-    backref=db.backref('users', lazy=True))
+    backref=db.backref('user', lazy=True))
 
   cards = db.relationship('Card', secondary=cards, lazy='subquery',
-    backref=db.backref('users', lazy=True))
+    backref=db.backref('user', lazy=True))
 
   def __init__(self, first_name, last_name, email):
     self.first_name = first_name
