@@ -3,6 +3,11 @@ from sqlalchemy.dialects.postgresql import UUID
 
 from .base import db
 
+labels = db.Table('card_labels',
+  db.Column('card_id', UUID(as_uuid=True), db.ForeignKey('cards.id'), primary_key=True),
+  db.Column('label_id', UUID(as_uuid=True), db.ForeignKey('labels.id'), primary_key=True)
+)
+
 class Card(db.Model):
   __tablename__ = 'cards'
 
@@ -15,6 +20,9 @@ class Card(db.Model):
   board_id = db.Column(UUID(as_uuid=True), db.ForeignKey('boards.id'), nullable=False)
   list_id = db.Column(UUID(as_uuid=True), db.ForeignKey('lists.id'), nullable=False)
   owner_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
+
+  labels = db.relationship('Label', secondary=labels, lazy='subquery',
+    backref=db.backref('cards', lazy=True))
 
   def __init__(self, name, description, position):
     self.name = name

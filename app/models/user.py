@@ -4,6 +4,16 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 from .base import db, bcrypt
 
+boards = db.Table('user_boards',
+  db.Column('user_id', UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True),
+  db.Column('board_id', UUID(as_uuid=True), db.ForeignKey('boards.id'), primary_key=True)
+)
+
+cards = db.Table('user_cards',
+  db.Column('user_id', UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True),
+  db.Column('card_id', UUID(as_uuid=True), db.ForeignKey('card.id'), primary_key=True)
+)
+
 class User(db.Model):
   __tablename__ = 'users'
 
@@ -16,6 +26,12 @@ class User(db.Model):
   comments = db.relationship('Comment', backref='user', lazy=True)
   owned_boards = db.relationship('Board', backref='user', lazy=True)
   owned_cards = db.relationship('Card', backref='user', lazy=True)
+
+  boards = db.relationship('Board', secondary=boards, lazy='subquery',
+    backref=db.backref('users', lazy=True))
+
+  cards = db.relationship('Card', secondary=cards, lazy='subquery',
+    backref=db.backref('users', lazy=True))
 
   def __init__(self, first_name, last_name, email):
     self.first_name = first_name
