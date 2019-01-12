@@ -1,7 +1,8 @@
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 
-from .base import db, BaseMixin
+from .base import db
+from .mixins.base import BaseMixin
 
 class List(BaseMixin, db.Model):
   __tablename__ = 'list'

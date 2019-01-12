@@ -1,7 +1,8 @@
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 
-from .base import db, BaseMixin
+from .base import db
+from .mixins.base import BaseMixin
 
 labels = db.Table('card_label',
   db.Column('card_id', UUID(as_uuid=True), db.ForeignKey('card.id'), primary_key=True),
