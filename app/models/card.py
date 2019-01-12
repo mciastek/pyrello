@@ -1,17 +1,16 @@
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 
-from .base import db
+from .base import db, BaseMixin
 
 labels = db.Table('card_label',
   db.Column('card_id', UUID(as_uuid=True), db.ForeignKey('card.id'), primary_key=True),
   db.Column('label_id', UUID(as_uuid=True), db.ForeignKey('label.id'), primary_key=True)
 )
 
-class Card(db.Model):
+class Card(BaseMixin, db.Model):
   __tablename__ = 'card'
 
-  id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
   name = db.Column(db.Text, nullable=False)
   description = db.Column(db.Text, nullable=False)
   position = db.Column(db.Integer, nullable=False, default=1)

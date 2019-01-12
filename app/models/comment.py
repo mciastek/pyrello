@@ -1,12 +1,11 @@
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 
-from .base import db
+from .base import db, BaseMixin
 
-class Comment(db.Model):
+class Comment(BaseMixin, db.Model):
   __tablename__ = 'comment'
 
-  id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
   text = db.Column(db.Text, nullable=False)
 
   user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('user.id'), nullable=False)

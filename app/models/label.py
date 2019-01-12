@@ -1,12 +1,11 @@
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 
-from .base import db
+from .base import db, BaseMixin
 
-class Label(db.Model):
+class Label(BaseMixin, db.Model):
   __tablename__ = 'label'
 
-  id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
   name = db.Column(db.Text, nullable=False)
   color = db.Column(db.String(8), nullable=False)
 

@@ -2,7 +2,7 @@ import uuid
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.hybrid import hybrid_property
 
-from .base import db, bcrypt
+from .base import db, bcrypt, BaseMixin
 
 boards = db.Table('user_board',
   db.Column('user_id', UUID(as_uuid=True), db.ForeignKey('user.id'), primary_key=True),
@@ -14,14 +14,15 @@ cards = db.Table('user_card',
   db.Column('card_id', UUID(as_uuid=True), db.ForeignKey('card.id'), primary_key=True)
 )
 
-class User(db.Model):
+class User(BaseMixin, db.Model):
   __tablename__ = 'user'
 
-  id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
   first_name = db.Column(db.Text, nullable=False)
   last_name = db.Column(db.Text, nullable=False)
   email = db.Column(db.String(120), unique=True, nullable=False)
   _password = db.Column(db.String(128))
+  created_at = db.Column(db.DateTime, default=db.func.now())
+  updated_at = db.Column(db.DateTime, default=db.func.now())
 
   comments = db.relationship('Comment', backref='user', lazy=True)
   owned_boards = db.relationship('Board', backref='user', lazy=True)

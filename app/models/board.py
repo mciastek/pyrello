@@ -1,12 +1,11 @@
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 
-from .base import db
+from .base import db, BaseMixin
 
-class Board(db.Model):
+class Board(BaseMixin, db.Model):
   __tablename__ = 'board'
 
-  id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
   name = db.Column(db.Text, nullable=False)
   slug = db.Column(db.Text, unique=True, nullable=False)
 
