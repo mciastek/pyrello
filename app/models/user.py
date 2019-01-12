@@ -24,9 +24,9 @@ class User(BaseMixin, db.Model):
   created_at = db.Column(db.DateTime, default=db.func.now())
   updated_at = db.Column(db.DateTime, default=db.func.now())
 
-  comments = db.relationship('Comment', backref='user', lazy=True)
-  owned_boards = db.relationship('Board', backref='user', lazy=True)
-  owned_cards = db.relationship('Card', backref='user', lazy=True)
+  comments = db.relationship('Comment', backref='author', lazy=True)
+  owned_boards = db.relationship('Board', backref='owner', lazy=True)
+  owned_cards = db.relationship('Card', backref='owner', lazy=True)
 
   boards = db.relationship('Board', secondary=boards, lazy='subquery',
     backref=db.backref('user', lazy=True))
@@ -34,10 +34,11 @@ class User(BaseMixin, db.Model):
   cards = db.relationship('Card', secondary=cards, lazy='subquery',
     backref=db.backref('user', lazy=True))
 
-  def __init__(self, first_name, last_name, email):
+  def __init__(self, first_name, last_name, email, password):
     self.first_name = first_name
     self.last_name = last_name
     self.email = email
+    self.password = password
 
   def __repr__(self):
     return '<User %r>' % self.email
@@ -47,5 +48,5 @@ class User(BaseMixin, db.Model):
     return self._password
 
   @password.setter
-  def _set_password(self, plaintext):
-    self._password = bcrypt.generate_password_hash(plaintext)
+  def password(self, plaintext):
+    self._password = bcrypt.generate_password_hash(plaintext).decode('utf-8')
