@@ -8,7 +8,8 @@ services:
     depends_on:
       - postgres
     environment:
-      - DB_CONNECTION_URI=postgresql://pyrello:pyrello@postgres:5432/pyrello
+      - DATABASE_URL=postgresql://pyrello:pyrello@postgres:5432/pyrello
+      - TEST_DATABASE_URL=postgresql://pyrello_test:pyrello_test@postgres:5432/pyrello_test
     ports:
       - '127.0.0.1:5000:5000'
     volumes:
@@ -25,5 +26,14 @@ services:
     volumes:
       - './postgres:/docker-entrypoint-initdb.d'
       - 'postgres-data:/var/lib/postgresql/data'
+  test_postgres:
+    restart: unless-stopped
+    image: postgres:10.4-alpine
+    ports:
+      - "127.0.0.1:5433:5432"
+    environment:
+      POSTGRES_DB: pyrello_test
+      POSTGRES_USER: pyrello_test
+      POSTGRES_PASSWORD: pyrello_test
 volumes:
   postgres-data:

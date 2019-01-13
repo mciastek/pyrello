@@ -6,9 +6,9 @@ from app.models import db, bcrypt
 
 migrate = Migrate()
 
-def create_app():
+def create_app(config=Config):
   app = Flask(__name__)
-  app.config.from_object(Config)
+  app.config.from_object(config)
 
   db.init_app(app)
   migrate.init_app(app, db)
