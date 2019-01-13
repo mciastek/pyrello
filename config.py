@@ -11,4 +11,4 @@ class TestConfig(Config):
   SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
     'postgresql://pyrello_test:pyrello_test@localhost:5433/pyrello_test'
   TESTING = True
-  BCRYPT_LOG_ROUNDS = 3
+  BCRYPT_LOG_ROUNDS = 4
