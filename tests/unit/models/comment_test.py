@@ -1,6 +1,6 @@
 from app.models import Comment
 
-def test_comment(test_client):
+def test_comment(app):
   comment = Comment(
     text='Some awesome comment'
   )

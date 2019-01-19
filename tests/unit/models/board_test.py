@@ -1,6 +1,6 @@
 from app.models import Board
 
-def test_board(test_client):
+def test_board(app):
   board = Board(
     name='My board',
     slug='my_board'

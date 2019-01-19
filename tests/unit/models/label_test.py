@@ -1,6 +1,6 @@
 from app.models import Label
 
-def test_label(test_client):
+def test_label(app):
   label = Label(
     name='Some awesome label',
     color='#ff0000'

@@ -21,10 +21,7 @@ class Auth(Resource):
     password = data['password']
     current_user = User.get_by_email(email)
 
-    if not current_user:
-      return { 'message': f'User {email} doesn\'t exist!' }, 404
-
-    if current_user.password_match(password):
+    if current_user and current_user.password_match(password):
       access_token = create_access_token(identity=email)
       refresh_token = create_refresh_token(identity=email)
 
@@ -33,4 +30,4 @@ class Auth(Resource):
         'refresh_token': refresh_token
       }
 
-    return { 'messsage': 'Wrong credentials' }, 403
+    return { 'message': 'Invalid credentials' }, 403

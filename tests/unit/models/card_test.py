@@ -1,6 +1,6 @@
 from app.models import Card
 
-def test_card(test_client):
+def test_card(app):
   card = Card(
     name='My card',
     description='Some awesome card',

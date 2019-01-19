@@ -3,7 +3,7 @@ import pytest
 from config import TestConfig
 
 from app import create_app
-from app.models import User, db
+from app.models import User, db as _db
 
 @pytest.fixture(scope='module')
 def dummy_user():
@@ -16,7 +16,7 @@ def dummy_user():
   return user
 
 @pytest.fixture(scope='module')
-def test_client():
+def app():
   flask_app = create_app(TestConfig)
 
   # Flask provides a way to test your application by exposing the Werkzeug test Client
@@ -31,11 +31,11 @@ def test_client():
 
   context.pop()
 
-
 @pytest.fixture(scope='module')
-def init_database():
+def db(app):
+  _db.drop_all()
   # Create the database and the database table
-  db.create_all()
+  _db.create_all()
 
   # Insert user data
   user = User(
@@ -44,11 +44,12 @@ def init_database():
     last_name='Doe',
     password='password'
   )
-  db.session.add(user)
+  _db.session.add(user)
 
   # Commit the changes for the users
-  db.session.commit()
+  _db.session.commit()
 
-  yield db  # this is where the testing happens!
+  yield _db  # this is where the testing happens!
 
-  db.drop_all()
+  _db.session.close()
+  _db.drop_all()

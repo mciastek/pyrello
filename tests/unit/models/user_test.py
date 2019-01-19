@@ -1,6 +1,6 @@
 from app.models import User
 
-def test_user(test_client):
+def test_user(app):
   user = User(
     first_name='Bruce',
     last_name='Wright',

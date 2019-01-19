@@ -1,6 +1,6 @@
 from app.models import List
 
-def test_list(test_client):
+def test_list(app):
   list = List(
     name='Some awesome List',
     position=1
