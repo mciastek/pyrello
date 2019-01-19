@@ -5,7 +5,7 @@ class Config(object):
     'postgresql://pyrello:pyrello@localhost:5432/pyrello'
   SQLALCHEMY_TRACK_MODIFICATIONS = False
   BCRYPT_LOG_ROUNDS = 12
-  SECRET_KEY = os.environ.get('SECRET_KEY') or 'supersecret'
+  JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'supersecret'
 
 class TestConfig(Config):
   SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \

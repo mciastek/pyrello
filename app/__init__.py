@@ -3,7 +3,7 @@ from config import Config
 from flask_migrate import Migrate
 
 from app.models import db, bcrypt
-from app.resources import api
+from app.resources import api, jwt
 
 migrate = Migrate()
 
@@ -15,6 +15,7 @@ def create_app(config=Config):
   migrate.init_app(app, db)
   bcrypt.init_app(app)
   api.init_app(app)
+  jwt.init_app(app)
 
   @app.route('/')
   def hello_world():

@@ -55,3 +55,10 @@ class User(BaseMixin, db.Model):
       plaintext,
       current_app.config.get('BCRYPT_LOG_ROUNDS')
     ).decode('utf-8')
+
+  def password_match(self, plaintext):
+    return bcrypt.check_password_hash(self.password, plaintext)
+
+  @classmethod
+  def get_by_email(cls, email):
+    return cls.query.filter_by(email = email).first()
