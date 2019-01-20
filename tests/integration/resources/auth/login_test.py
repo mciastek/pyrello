@@ -1,6 +1,8 @@
 import json
 from http import HTTPStatus
 
+URL = '/api/auth'
+
 VALID_USER = dict(
   email = 'dummy@test.com',
   password = 'password'
@@ -17,7 +19,7 @@ INVALID_CREDENTIALS_RES = dict(
 
 def test_invalid_email(app, db):
   response = app.post(
-    '/auth',
+    URL,
     data = json.dumps(INVALID_USER),
     content_type = 'application/json'
   )
@@ -32,7 +34,7 @@ def test_invalid_password(app, db):
   )
 
   response = app.post(
-    '/auth',
+    URL,
     data = json.dumps(data),
     content_type = 'application/json'
   )
@@ -47,7 +49,7 @@ def test_missing_params(app, db):
   )
 
   response = app.post(
-    '/auth',
+    URL,
     data = json.dumps(data),
     content_type = 'application/json'
   )
@@ -63,7 +65,7 @@ def test_missing_params(app, db):
 
 def test_valid_credentials(app, db):
   response = app.post(
-    '/auth',
+    URL,
     data = json.dumps(VALID_USER),
     content_type = 'application/json'
   )
