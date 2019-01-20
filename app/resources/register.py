@@ -36,8 +36,8 @@ class Register(Resource):
     except IntegrityError:
       return {
         'message': {
-          'email': 'Already exists'
-          }
+          'email': 'Already in use'
+        }
       }, HTTPStatus.CONFLICT
 
     return { 'message': 'Missing data' }, HTTPStatus.BAD_REQUEST

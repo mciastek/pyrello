@@ -9,8 +9,6 @@ from app.models import User, db as _db
 def dummy_user():
   user = User(
     email='dummy@test.com',
-    first_name='Joe',
-    last_name='Doe',
     password='password'
   )
   return user
@@ -32,19 +30,13 @@ def app():
   context.pop()
 
 @pytest.fixture(scope='module')
-def db(app):
+def db(app, dummy_user):
   _db.drop_all()
   # Create the database and the database table
   _db.create_all()
 
-  # Insert user data
-  user = User(
-    email='dummy@test.com',
-    first_name='Joe',
-    last_name='Doe',
-    password='password'
-  )
-  _db.session.add(user)
+  # Add dummy user
+  _db.session.add(dummy_user)
 
   # Commit the changes for the users
   _db.session.commit()

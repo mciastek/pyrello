@@ -19,8 +19,8 @@ cards = db.Table('user_card',
 class User(BaseMixin, db.Model):
   __tablename__ = 'user'
 
-  first_name = db.Column(db.Text, nullable=False)
-  last_name = db.Column(db.Text, nullable=False)
+  first_name = db.Column(db.Text, nullable=True)
+  last_name = db.Column(db.Text, nullable=True)
   email = db.Column(db.String(120), unique=True, nullable=False)
   _password = db.Column(db.String(128))
   created_at = db.Column(db.DateTime, default=db.func.now())
@@ -36,9 +36,7 @@ class User(BaseMixin, db.Model):
   cards = db.relationship('Card', secondary=cards, lazy='subquery',
     backref=db.backref('user', lazy=True))
 
-  def __init__(self, first_name, last_name, email, password):
-    self.first_name = first_name
-    self.last_name = last_name
+  def __init__(self, email, password):
     self.email = email
     self.password = password
 
