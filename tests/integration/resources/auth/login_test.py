@@ -1,4 +1,5 @@
 import json
+from http import HTTPStatus
 
 VALID_USER = dict(
   email = 'dummy@test.com',
@@ -21,7 +22,7 @@ def test_invalid_email(app, db):
     content_type = 'application/json'
   )
 
-  assert response.status_code == 403
+  assert response.status_code == HTTPStatus.FORBIDDEN
   assert json.loads(response.data) == INVALID_CREDENTIALS_RES
 
 def test_invalid_password(app, db):
@@ -36,7 +37,7 @@ def test_invalid_password(app, db):
     content_type = 'application/json'
   )
 
-  assert response.status_code == 403
+  assert response.status_code == HTTPStatus.FORBIDDEN
   assert json.loads(response.data) == INVALID_CREDENTIALS_RES
 
 
@@ -57,7 +58,7 @@ def test_missing_params(app, db):
     )
   )
 
-  assert response.status_code == 400
+  assert response.status_code == HTTPStatus.BAD_REQUEST
   assert json.loads(response.data) == error_response_json
 
 def test_valid_credentials(app, db):
@@ -67,6 +68,6 @@ def test_valid_credentials(app, db):
     content_type = 'application/json'
   )
 
-  assert response.status_code == 200
+  assert response.status_code == HTTPStatus.OK
   assert 'access_token' in json.loads(response.data)
   assert 'refresh_token' in json.loads(response.data)

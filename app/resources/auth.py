@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import (
   create_access_token,
@@ -30,4 +32,4 @@ class Auth(Resource):
         'refresh_token': refresh_token
       }
 
-    return { 'message': 'Invalid credentials' }, 403
+    return { 'message': 'Invalid credentials' }, HTTPStatus.FORBIDDEN
