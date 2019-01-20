@@ -5,47 +5,62 @@ from config import TestConfig
 from app import create_app
 from app.models import User, db as _db
 
-@pytest.fixture(scope='module')
-def dummy_user():
-  user = User(
-    email='dummy@test.com',
-    password='password'
-  )
-  return user
+@pytest.fixture(scope='session')
+def app(request):
+  app = create_app(TestConfig)
+  client = app.test_client()
 
-@pytest.fixture(scope='module')
-def app():
-  flask_app = create_app(TestConfig)
-
-  # Flask provides a way to test your application by exposing the Werkzeug test Client
-  # and handling the context locals for you.
-  client = flask_app.test_client()
-
-  # Establish an application context before running the tests.
-  context = flask_app.app_context()
+  context = app.app_context()
   context.push()
 
-  yield client  # this is where the testing happens!
+  def teardown():
+    context.pop()
 
-  context.pop()
+  request.addfinalizer(teardown)
+  return client
 
-@pytest.fixture(scope='module')
-def db(app):
-  _db.drop_all()
-  # Create the database and the database table
+@pytest.fixture(scope='session')
+def db(app, request):
+  connection = _db.engine.connect()
+  trans = connection.begin()
+
   _db.create_all()
 
-  # Add dummy user
+  def close_db_session():
+    trans.rollback()
+    _db.drop_all()
+    connection.close()
+
+  request.addfinalizer(close_db_session)
+  return _db
+
+@pytest.fixture(scope='function')
+def session(db, request):
+  """Creates a new database session for a test."""
+  connection = db.engine.connect()
+  transaction = connection.begin()
+
+  options = dict(bind=connection, binds={})
+  session = db.create_scoped_session(options=options)
+
+  db.session = session
+
+  def teardown():
+    transaction.rollback()
+    connection.close()
+    session.remove()
+
+  request.addfinalizer(teardown)
+  return session
+
+@pytest.fixture(scope='function')
+def dummy_user(session):
   user = User(
     email='dummy@test.com',
     password='password'
   )
-  _db.session.add(user)
 
-  # Commit the changes for the users
-  _db.session.commit()
+  session.add(user)
+  session.commit()
 
-  yield _db  # this is where the testing happens!
-
-  _db.session.close()
-  _db.drop_all()
+  return user
