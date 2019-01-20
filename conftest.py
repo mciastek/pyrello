@@ -30,13 +30,17 @@ def app():
   context.pop()
 
 @pytest.fixture(scope='module')
-def db(app, dummy_user):
+def db(app):
   _db.drop_all()
   # Create the database and the database table
   _db.create_all()
 
   # Add dummy user
-  _db.session.add(dummy_user)
+  user = User(
+    email='dummy@test.com',
+    password='password'
+  )
+  _db.session.add(user)
 
   # Commit the changes for the users
   _db.session.commit()
