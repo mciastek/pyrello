@@ -10,7 +10,7 @@ from flask_jwt_extended import (
   get_raw_jwt
 )
 
-from app.models import User, db
+from app.models import User
 
 parser = reqparse.RequestParser()
 parser.add_argument('email', help='This field cannot be blank', required = True)
