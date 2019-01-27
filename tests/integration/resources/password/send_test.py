@@ -39,4 +39,5 @@ def test_valid_email(app, db, dummy_user):
   )
 
   assert response.status_code == HTTPStatus.ACCEPTED
-  assert json.loads(response.data) == SUCCESS_RES
+  assert 'token' in json.loads(response.data)
+  assert json.loads(response.data).get('message') == SUCCESS_RES.get('message')
