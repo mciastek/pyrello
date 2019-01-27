@@ -1,36 +1,39 @@
 from http import HTTPStatus
 
-from flask import current_app
+from flask import current_app, request, make_response, jsonify
 from itsdangerous import TimestampSigner
-from flask_restful import Resource, reqparse
 
+from .base import api_bp
 from app.models import User
 
-parser = reqparse.RequestParser()
-parser.add_argument('email', help='This field cannot be blank', required = True)
+@api_bp.route('/password/send', methods=['POST'])
+def send():
+  pass_secret = current_app.config.get('PASS_SECRET_KEY')
+  pass_token_age = current_app.config.get('PASS_TOKEN_AGE')
+  email = request.json.get('email')
 
-pass_secret = current_app.config.get('PASS_SECRET_KEY')
-pass_token_age = current_app.config.get('PASS_TOKEN_AGE')
+  user = User.get_by_email(email)
 
-class Password(Resource):
-  def reset(self):
-    data = parser.parse_args()
-    email = data['email']
+  if user:
+    singed = TimestampSigner(pass_secret)
+    token = singed.sign(user.email)
+    singed.unsign(token, max_age=pass_token_age)
 
-    user = User.get_by_email(email)
+    # TODO: add sending email
+    print(f'Reset password link: /password/reset?token={token}'.encode('utf-8'))
 
-    if user:
-      singed = TimestampSigner(pass_secret)
-      token = singed.sign(user.email)
-      singed.unsign(token, max_age=pass_token_age)
+    return make_response(
+      jsonify({
+        'message': 'Email has been sent'
+      }),
+      HTTPStatus.ACCEPTED
+    )
 
-      # TODO: add sending email
-      print(f'Reset password link: password/reset?token={token}')
-
-      return {}, HTTPStatus.NO_CONTENT
-
-    return {
+  return make_response(
+    jsonify({
       'message': {
         'email': 'Not found'
       }
-    }, HTTPStatus.NOT_FOUND
+    }),
+    HTTPStatus.NOT_FOUND
+  )

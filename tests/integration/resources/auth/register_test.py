@@ -30,7 +30,6 @@ def test_existing_user(app, db, dummy_user):
   assert json.loads(response.data) == CONFLICT_RES
 
 def test_new_user(app, db, dummy_user):
-  print(json.dumps(NEW_USER))
   response = app.post(
     URL,
     data = json.dumps(NEW_USER),

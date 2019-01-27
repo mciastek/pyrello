@@ -2,6 +2,8 @@ from .base import api, api_bp, jwt
 from .auth import Auth
 from .register import Register
 
+import app.resources.password
+
 api.add_resource(Auth, '/auth')
 api.add_resource(Register, '/auth/register')
 
