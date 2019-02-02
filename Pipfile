@@ -23,6 +23,7 @@ gunicorn = "*"
 pytest = "*"
 flask-restful = "*"
 flask-jwt-extended = "*"
+python-slugify = "*"
 
 [requires]
 python_version = "3.7"

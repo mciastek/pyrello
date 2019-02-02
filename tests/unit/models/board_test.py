@@ -1,10 +1,10 @@
 from app.models import Board
 
-def test_board(app):
+def test_board(app, db, dummy_user):
   board = Board(
     name='My board',
-    slug='my_board'
+    owner_id=dummy_user.id
   )
 
   assert board.name == 'My board'
-  assert board.slug == 'my_board'
+  assert board.owner_id == dummy_user.id
