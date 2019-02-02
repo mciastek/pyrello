@@ -3,7 +3,7 @@ from slugify import slugify
 from app.models.base import db
 
 def generate_slug(context):
-  return slugify(context.get_current_parameters().get('slug'))
+  return slugify(context.get_current_parameters().get('name'))
 
 class SlugifiedMixin(object):
   slug = db.Column(

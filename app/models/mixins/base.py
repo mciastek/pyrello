@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime
+from sqlalchemy import event
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.models.base import db
@@ -10,18 +11,13 @@ class BaseMixin(CRUDMixin, object):
   created_at = db.Column('created_at', db.DateTime, nullable=False)
   updated_at = db.Column('updated_at', db.DateTime, nullable=False)
 
-  @staticmethod
-  def create_time(mapper, connection, instance):
-    now = datetime.utcnow()
-    instance.created_at = now
-    instance.updated_at = now
+@event.listens_for(BaseMixin, 'before_insert', propagate=True)
+def before_insert(mapper, connection, instance):
+  now = datetime.utcnow()
+  instance.created_at = now
+  instance.updated_at = now
 
-  @staticmethod
-  def update_time(mapper, connection, instance):
-    now = datetime.utcnow()
-    instance.updated_at = now
-
-  @classmethod
-  def register(cls):
-    db.event.listen(cls, 'before_insert', cls.create_time)
-    db.event.listen(cls, 'before_update', cls.update_time)
+@event.listens_for(BaseMixin, 'before_update', propagate=True)
+def before_update(mapper, connection, instance):
+  now = datetime.utcnow()
+  instance.updated_at = now

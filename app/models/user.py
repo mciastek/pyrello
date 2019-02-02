@@ -23,8 +23,6 @@ class User(BaseMixin, db.Model):
   last_name = db.Column(db.Text, nullable=True)
   email = db.Column(db.String(120), unique=True, nullable=False)
   _password = db.Column(db.String(128))
-  created_at = db.Column(db.DateTime, default=db.func.now())
-  updated_at = db.Column(db.DateTime, default=db.func.now())
 
   comments = db.relationship('Comment', backref='author', lazy=True)
   owned_boards = db.relationship('Board', backref='owner', lazy=True)

@@ -1,4 +1,5 @@
 import pytest
+import json
 
 from config import TestConfig
 
@@ -64,3 +65,22 @@ def dummy_user(session):
   session.commit()
 
   return user
+
+@pytest.fixture(scope='function')
+def authorized_user(app, db, dummy_user):
+  data = {
+    'email': dummy_user.email,
+    'password': 'password',
+  }
+
+  response = app.post(
+    '/api/auth',
+    data = json.dumps(data),
+    content_type = 'application/json'
+  )
+
+  return {
+    'user': dummy_user,
+    'access_token': json.loads(response.data).get('access_token'),
+    'refresh_token': json.loads(response.data).get('refresh_token')
+  }

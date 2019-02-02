@@ -1,3 +1,4 @@
+import uuid
 from http import HTTPStatus
 
 from flask_restful import Resource, reqparse, fields, marshal
@@ -11,13 +12,14 @@ from flask_jwt_extended import (
   get_raw_jwt
 )
 
-from app.models import Board
+from app.models import Board as BoardModel
 
 parser = reqparse.RequestParser()
 parser.add_argument('name', help='Required', required=True)
 parser.add_argument('owner_id', help='Required', required=True)
 
 permitted = {
+  'id': fields.String,
   'name': fields.String,
   'owner_id': fields.String
 }
@@ -31,9 +33,9 @@ class Board(Resource):
     owner_id = data['owner_id']
 
     try:
-      new_board = Board(
+      new_board = BoardModel(
         name=name,
-        owner_id=owner_id
+        owner_id=uuid.UUID(owner_id)
       )
 
       new_board.save()
@@ -41,7 +43,7 @@ class Board(Resource):
       return {
         'board': marshal(new_board, permitted)
       }, HTTPStatus.CREATED
-    except:
+    except Exception as error:
       return {
-        'message': 'Bad request'
-      }, HTTPStatus.BAD_REQUEST
+        'message': str(error)
+      }, HTTPStatus.INTERNAL_SERVER_ERROR
